@@ -2,7 +2,7 @@
 #Ten question multiplication quiz that allows 3 attempts per question and 8 seconds per attempt
 
 import random, time
-from questionClass import Question
+from questionClass import Question, TimeLimitException, AttemptLimitException
 
 def questionList(numberOfQuestions):
   li = []
@@ -30,13 +30,17 @@ def answerLoop(li):
     end = time.time()
     ## Trying to figure out where to put if statement if time runs out
     ##Maybe look at try case methods!!!
-    while attempts < 3 and (end - start) <= 8:
-      if answerCheck(answer, question):
-        print('Correct!')
-        correct += 1
-        break
-      else:
+    try: 
+      answer = input(f'{question.questionText}')
+      if not answerCheck(answer, question):
         print('Incorrect.')
+    except TimeLimitException:
+      print('Out of time!')
+    except AttemptLimitException:
+      print('Out of attempts!')
+    else:
+      print('Correct!')
+      correct += 1
 
 def main():
   numberOfQuestions = 10
