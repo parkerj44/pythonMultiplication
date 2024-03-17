@@ -12,10 +12,3 @@ class AttemptLimitException(Exception):
 class TimeLimitException(Exception):
   pass
 
-def checkTimeLimit(startTime, finish):
-  if time.time() > startTime + finish:
-    return TimeLimitException()
-  
-def checkAttemptLimit(attempts, limit):
-  if attempts == limit:
-    return AttemptLimitException()
