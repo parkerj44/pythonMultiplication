@@ -24,23 +24,33 @@ def answerCheck(answer, question):
 
 def answerLoop(li):
   for question in li:
-    attempts = 0
-    start = time.time()
-    answer = input(f'{question.questionText}')
-    end = time.time()
-    ## Trying to figure out where to put if statement if time runs out
-    ##Maybe look at try case methods!!!
     try: 
-      answer = input(f'{question.questionText}')
-      if not answerCheck(answer, question):
-        print('Incorrect.')
+      attempts = 0
+      correct = False
+      while attempts < 3 and not correct:
+        start = time.time()
+        answer = input(f'{question.questionText}')
+        end = time.time()
+        if end - start >= 10:
+          raise TimeLimitException
+        if not answerCheck(answer, question):
+          print('Incorrect.')
+          attempts += 1
+          if attempts == 3:
+            raise AttemptLimitException
+        else:
+          correct = True
     except TimeLimitException:
       print('Out of time!')
     except AttemptLimitException:
       print('Out of attempts!')
+    except Exception as e:
+      print(e)
     else:
       print('Correct!')
-      correct += 1
+      correctAttempts += 1
+
+  return correctAttempts
 
 def main():
   numberOfQuestions = 10
@@ -48,7 +58,8 @@ def main():
   li = questionList(numberOfQuestions)
 
   
-  answerLoop(li)
+  correct += answerLoop(li)
+  print('You got %s/10 correct!' % (correct))
       
 
 main()
